@@ -101,7 +101,20 @@ assert.ok(all.scenes.length >= 8, 'merged scene list should include seeds')
 assert.ok(all.domains.length >= 4, 'domains facet should be populated')
 await store.dispose()
 
-// 5. 分析结果解析：带围栏 / 带废话 / 被截断
+// 5. 市场分发：CDN → raw 的兜底推导、catalog 与 registry/scenes 一致
+const { fallbackUrls } = await import('../lib/registry.js')
+assert.deepEqual(fallbackUrls('https://cdn.jsdelivr.net/gh/o/r@master/registry/catalog.json'), [
+  'https://cdn.jsdelivr.net/gh/o/r@master/registry/catalog.json',
+  'https://raw.githubusercontent.com/o/r/master/registry/catalog.json',
+])
+assert.deepEqual(fallbackUrls('https://example.com/catalog.json'), ['https://example.com/catalog.json'])
+const catalog = JSON.parse(await fsp.readFile(new URL('../registry/catalog.json', import.meta.url), 'utf8'))
+assert.equal(catalog.schemaVersion, 1)
+assert.equal(catalog.count, catalog.scenes.length)
+assert.equal(catalog.scenes.length, seed.scenes.length, 'catalog 与 seed 条数应一致（都由 market:build 生成）')
+assert.ok(catalog.scenes[0].featured === true, 'catalog 排序应把 featured 放前面')
+
+// 6. 分析结果解析：带围栏 / 带废话 / 被截断
 const { parseBlueprint } = await import('../lib/analyze.js')
 const fenced = parseBlueprint('```json\n{"caseTitle":"测试","oneLine":"x","pains":[],"opportunities":[]}\n```')
 assert.equal(fenced.caseTitle, '测试')

@@ -24,6 +24,7 @@ FDE（Forward Deployed Engineer，驻场交付工程师）最费时间的不是�
 | `dsh-plugin-local-voice` | 本地实时转写浮窗（Apple Silicon + Qwen3-ASR） | 互补。它的转写结果可以直接粘进本插件的材料 |
 | `dsh-asr-plugin` | 会议转写 + 说话人标签 + `@会议` 让 agent 总结 | 部分重叠（都做转写）。它做会议记录，本插件做业务建模与场景沉淀 |
 | `dsh-market` / `dshmarket` | 通用插件市场 | 形态不同。它分发**插件**，本插件分发**AI+业务场景卡** |
+| `dsh-mcp-connector` | MCP 连接器目录，catalog 走 jsDelivr + 独立注册表 | **借鉴了它的分发做法**：一条一个文件、schema 校验、catalog 脚本生成、CDN→raw 兜底 |
 
 **没有找到**把「现场录音/材料 → 业务与 AI 逻辑 → 可复用场景资产」这条链打通的现成开源项目，所以自己写了一个。转写层不重造轮子：宿主有语音服务就用，没有就接本地命令，都没有就如实标注「未转写」。
 
@@ -71,9 +72,17 @@ dsh plugin --profile desktop add github:<owner>/dsh-fdehub
 ### 二、市场：场景资产流通
 
 - 内置 12 条种子场景（协同办公/客户服务/售后/采购/法务/财务/人力/知识管理/项目管理/运营/销售），综合类业务通用，离线可用；
-- 搜索 + 按域筛选，点开看五要素；
+- 远端目录（catalog）走 jsDelivr CDN，拉不到自动退 `raw.githubusercontent`，缓存 5 分钟、面板「刷新」强制重取；
+- 搜索 + 按域筛选，`featured` 优先排序，点开看五要素 + 贡献者 / 更新时间 / 许可；
 - **用这个场景起案例**：把场景填成案例的「补充背景」，现场只需补客户事实；
-- **发布成场景**：把一次分析抽成卡片，存本地并给出可提 PR 的 JSON。
+- **发布成场景**：把一次分析抽成卡片，存本地并给出可提 PR 的 `registry/scenes/<id>.json`。
+
+分发结构参照 `dsh-mcp-connector` 的社区注册表做法：一条场景一个文件、schema 校验、catalog 由脚本生成，PR 不打架。
+
+```sh
+npm run market:build      # registry/scenes/*.json → registry/catalog.json + scenes/seed.json
+npm run market:validate   # 上架门禁：五要素 / 指标可测量 / 敏感信息 / featured 占比
+```
 
 ### 三、对 agent 说
 
@@ -107,7 +116,8 @@ dsh plugin --profile desktop add github:<owner>/dsh-fdehub
 | `analysisMaxChars` | 60000 | 送进模型的材料上限，超了会截断并在结果里标注 |
 | `ocrEnabled` | `true` | 图片/扫描件是否走宿主模型识图 |
 | `ocrMaxPages` | 5 | 扫描版 PDF 最多识别前几页（每页一次模型请求） |
-| `indexUrl` | 空 | 场景市场远端索引（GitHub raw 的 `scenes/index.json`） |
+| `indexUrl` | jsDelivr 上的 `registry/catalog.json` | 场景市场远端目录；CDN 失败自动退 raw |
+| `refreshSkewMs` | 300000 | 目录缓存时长，面板「刷新」无视它 |
 | `author` / `org` | 空 | 发布场景时的署名 |
 
 本地转写命令示例（Apple Silicon，先 `pip install mlx-whisper`）：
@@ -144,10 +154,12 @@ lib/extract.js        pdf/docx/pptx/xlsx/txt 取文（本机工具优先）
 lib/ocr.js            图片 / 扫描版 PDF 识图（走宿主模型，不内置引擎）
 lib/asr.js            转写引擎链：宿主服务 → 本地命令 → 如实标注未转写
 lib/analyze.js        prompt、截断容错解析、结果收口、场景卡抽取
-lib/registry.js       场景市场：种子 + 本地 + 远端索引
+lib/registry.js       场景市场：种子 + 本地 + 远端 catalog（CDN→raw 兜底、缓存、featured 排序）
 lib/routes.js         /fdehub/api
 lib/tools.js          6 个 agent 工具
-scenes/               种子场景与索引（GitHub 上的集散地）
+registry/             场景注册表（真源）：schema + scenes/<id>.json + 生成的 catalog.json
+scenes/seed.json      内置种子（生成物，离线可用）
+scripts/              market:build / market:validate
 ```
 
 ## 已知限制

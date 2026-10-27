@@ -1,59 +1,23 @@
 # 场景市场：怎么往上加一条
 
-市场里的一条「场景」不是案例，也不是 PPT 里的愿景，而是五个必须能答上来的问题：
+> 真源在 `registry/scenes/`，本目录的 `seed.json` 是生成物（`npm run market:build` 产出，不要手改）。
+> 完整上架流程、门禁规则、分发方式见 [`registry/README.md`](../registry/README.md)。
+
+一条「场景」不是案例，也不是 PPT 里的愿景，而是五个必须能答上来的问题：
 
 1. **插在流程哪一步**（`injection`）——在谁手上、什么时点触发。说不清插在哪的，是口号。
-2. **吃什么**（`inputs`）——录音、工单文本、报价单 PDF、BOM 表……
+2. **吃什么**（`inputs`）——录音、工单文本、报价单 PDF、制度文件……
 3. **产出什么**（`outputs`）——给谁看、什么形态（表 / 预警 / 草稿 / 工单）。
 4. **人在哪兜底**（`humanInLoop`）——哪一步必须人确认。
-5. **用什么证明有效**（`proofMetric`）——指标 + 时间窗。
+5. **用什么证明有效**（`proofMetric`）——指标 + 时间窗，必须带数字。
 
 答不上第 1 条和第 5 条的场景，一律不收。
 
 ## 三种提交方式
 
-### 方式 A：在插件里发布（最省事）
-
-1. FDE 工坊里把一次现场梳理做完（有了结构化蓝图）；
-2. 点「发布成场景」——会存进本地市场，同时把 PR 用的 JSON 复制进剪贴板；
-3. 把 JSON 贴到本仓库，提 PR。
-
-### 方式 B：直接写 JSON
-
-在 `scenes/` 下新建 `<id>.json`，字段照下面填，然后在 `scenes/index.json` 的 `scenes` 数组里加同一条（索引和正文内容一致即可，插件只读索引里有的条目）。
-
-### 方式 C：追加到 `scenes/seed.json`
-
-种子场景会被每次启动合并进本地库（同 id 不覆盖）。想让所有人都默认看到，就加在这里。
-
-## 一条场景卡的字段
-
-```json
-{
-  "id": "seed-dealer-meeting-actions",
-  "title": "客户会议录音 → 行动项工单",
-  "domain": "营销",
-  "industry": "通用",
-  "summary": "一句话说清这个场景做什么",
-  "pain": "不做这件事的时候，现场是什么样",
-  "aiPattern": "信息抽取 + 生成",
-  "injection": "插在流程哪一步、谁来用",
-  "inputs": "模型吃什么",
-  "outputs": "输出给谁、什么形态",
-  "humanInLoop": "哪一步必须人确认",
-  "proofMetric": "指标 + 时间窗",
-  "effort": "S",
-  "metrics": ["量化收益 1", "量化收益 2"],
-  "risks": ["最可能翻车的地方"],
-  "author": "你的名字或花名",
-  "org": "团队 / 公司（可留空）",
-  "version": "0.1.0",
-  "license": "CC-BY-4.0",
-  "createdAt": "2026-10-27T00:00:00.000Z"
-}
-```
-
-`effort` 取值 `S`（两周内）/ `M`（一个季度内）/ `L`（要立项）。
+1. **面板发布（最省事）**：FDE 工坊里做完一次梳理 → 点「发布成场景」→ 存进本地市场，同时把 `registry/scenes/<id>.json` 的内容复制到剪贴板 → 提 PR。
+2. **手写文件**：`cp registry/scenes/seed-meeting-actions.json registry/scenes/<你的id>.json`，改完跑 `npm run market:build && npm run market:validate`。
+3. **批量导入**：直接往 `registry/scenes/` 放多个文件，build 会一起收进 catalog。
 
 ## 提交前自查
 
@@ -62,13 +26,3 @@
 - [ ] `proofMetric` 是不是可测量？「效率提升」不算。
 - [ ] `risks` 有没有写？只讲好处的场景卡价值为零。
 - [ ] license 是否为你有权授权的？默认 CC-BY-4.0，公司内部资产请先确认。
-
-## 索引文件
-
-`scenes/index.json` 是插件拉取的入口（`cordis.patch.yml` 里的 `indexUrl` 指它）。格式：
-
-```json
-{ "version": 1, "scenes": [ { "id": "...", "title": "...", ... } ] }
-```
-
-插件对网络失败是软的：拉不到就退回「内置种子 + 本机发布」，不会让市场空掉。

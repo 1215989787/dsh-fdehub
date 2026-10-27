@@ -48,10 +48,12 @@
         # 扫描版 PDF 最多识别前 N 页（每页一次模型请求，页数=成本与等待）
         ocrMaxPages: 5
         # ── 场景市场 ─────────────────────────────────────────────────
-        # 远端索引：指向 GitHub 上的 scenes/index.json（raw 地址）
-        # 例：https://raw.githubusercontent.com/<owner>/dsh-fdehub/main/scenes/index.json
-        # 留空 = 只用仓库自带的种子场景 + 本地发布的场景
-        indexUrl: ''
+        # 远端目录（catalog）。默认走 jsDelivr CDN，失败自动退 raw.githubusercontent。
+        # 想只用自己的私有库，把这里换成你的地址即可；留空 = 只用内置种子 + 本机发布。
+        # 目录由 scripts/market-build.mjs 从 registry/scenes/*.json 生成。
+        indexUrl: 'https://cdn.jsdelivr.net/gh/1215989787/dsh-fdehub@master/registry/catalog.json'
+        # 目录缓存时长（毫秒）。市场内容变得慢，5 分钟足够；面板点「刷新」会强制重取。
+        refreshSkewMs: 300000
         # 作者署名，发布场景卡时写进去
         author: ''
         # 团队/公司，发布场景卡时写进去

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "seed-field-inspection",
+  "title": "现场巡检口述 → 结构化记录",
+  "domain": "运营",
+  "industry": "通用",
+  "summary": "巡检人员说一段话，自动生成带点位、问题类型、严重度、处置措施的记录。",
+  "pain": "纸单和微信记录没法统计，问题趋势只能靠月底翻照片。",
+  "aiPattern": "语音转写 + 信息抽取",
+  "injection": "发现问题当场口述 30 秒，班组长确认后入系统",
+  "inputs": "现场录音、点位清单、问题分类表、现场照片",
+  "outputs": "结构化记录：时间/点位/问题类型/严重度/处置/照片引用",
+  "humanInLoop": "班组长复核后提交，严重度高的自动升级",
+  "proofMetric": "记录完整率从 65% 到 98%；趋势分析从月度到日度",
+  "effort": "S",
+  "metrics": [
+    "单条记录 3 分钟 → 40 秒"
+  ],
+  "risks": [
+    "现场噪声影响转写",
+    "口语与标准分类对不上"
+  ],
+  "tags": [
+    "运营",
+    "语音转写 + 信息抽取"
+  ],
+  "author": "",
+  "org": "",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "published": true,
+  "featured": false,
+  "createdAt": "2026-10-27T00:00:00.000Z",
+  "updatedAt": "2026-10-27T00:00:00.000Z"
+}

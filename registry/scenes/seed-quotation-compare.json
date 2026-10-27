@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "seed-quotation-compare",
+  "title": "多家报价单 → 同口径比价",
+  "domain": "采购",
+  "industry": "通用",
+  "summary": "把格式各异的报价单抽成同一张比价表，含税、运费、账期、质保等非价格条款差异。",
+  "pain": "比价靠人往 Excel 里抄，抄错一行就差几十万；非价格条款常被忽略。",
+  "aiPattern": "多模态抽取",
+  "injection": "采购收到报价单时，批量拖进来生成比价底稿",
+  "inputs": "报价单 PDF/扫描件、历史价格基线、税率与汇率",
+  "outputs": "比价表：分项价格、含税落地价、账期、质保、异常项、建议谈判点",
+  "humanInLoop": "采购经理核对异常项与条款差异后定标",
+  "proofMetric": "单份报价处理 40 分钟 → 5 分钟；比价口径争议归零",
+  "effort": "M",
+  "metrics": [
+    "人工抄录错误率从 12% 降到 2% 以内"
+  ],
+  "risks": [
+    "扫描件表格线缺失导致串行",
+    "页脚补充条款容易漏抽"
+  ],
+  "tags": [
+    "采购",
+    "多模态抽取"
+  ],
+  "author": "",
+  "org": "",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "published": true,
+  "featured": true,
+  "createdAt": "2026-10-27T00:00:00.000Z",
+  "updatedAt": "2026-10-27T00:00:00.000Z"
+}

@@ -108,6 +108,11 @@ window.__ModuleLoader__.load({
         refresh: '刷新远端索引',
         remoteErr: '远端索引拉取失败（只用本地场景）',
         localEmpty: '没有匹配的场景',
+        featured: '推荐',
+        by: '贡献者',
+        updated: '更新',
+        license: '许可',
+        indexFrom: '目录源',
         useScene: '用这个场景起案例',
         sceneCreated: '已新建案例，去「FDE 工坊」补齐现场事实',
         seed: '内置',
@@ -201,6 +206,11 @@ window.__ModuleLoader__.load({
         refresh: 'Refresh remote index',
         remoteErr: 'Remote index failed (local scenes only)',
         localEmpty: 'No matching scenario',
+        featured: 'Featured',
+        by: 'By',
+        updated: 'Updated',
+        license: 'License',
+        indexFrom: 'Catalog',
         useScene: 'Start a case with this scenario',
         sceneCreated: 'Case created — finish it in the workshop',
         seed: 'bundled',
@@ -827,6 +837,7 @@ window.__ModuleLoader__.load({
           ),
           h('div', { className: 'fde-top-r' },
             h(Pill, null, `${scenes.length} / ${data?.total ?? 0}`),
+            data?.featured ? h(Pill, { tone: 'ok' }, `${t('featured')} ${data.featured}`) : null,
             h('button', { className: 'fde-btn fde-btn-ghost', onClick: () => void load({ refresh: true }) }, t('refresh')),
           ),
         ),
@@ -860,6 +871,7 @@ window.__ModuleLoader__.load({
               },
                 h('div', { className: 'fde-scene-h' },
                   h('span', { className: 'fde-scene-t' }, scene.title),
+                  scene.featured ? h(Pill, { tone: 'ok' }, `★ ${t('featured')}`) : null,
                   h(Pill, { tone: scene.origin === 'local' ? 'ok' : null }, t(scene.origin === 'local' ? 'local' : scene.origin === 'seed' ? 'seed' : 'remote')),
                 ),
                 h('div', { className: 'fde-scene-s' }, scene.summary),
@@ -879,6 +891,12 @@ window.__ModuleLoader__.load({
                       h(Field, { label: t('proof'), value: scene.proofMetric }),
                       scene.metrics?.length ? h(Field, { label: t('metrics'), value: scene.metrics.join('；') }) : null,
                       scene.risks?.length ? h(Field, { label: t('risk'), value: scene.risks.join('；') }) : null,
+                      h('div', { className: 'fde-scene-foot' },
+                        scene.author || scene.org ? `${t('by')} ${scene.author || '—'}${scene.org ? ` @ ${scene.org}` : ''}` : '',
+                        scene.updatedAt ? `${t('updated')} ${String(scene.updatedAt).slice(0, 10)}` : '',
+                        `${t('license')} ${scene.license}`,
+                        scene.tags?.length ? scene.tags.join(' · ') : '',
+                      ),
                       h('div', { className: 'fde-actions', onClick: (event) => event.stopPropagation() },
                         h('button', { className: 'fde-btn fde-btn-primary', disabled: busy, onClick: () => void useScene(scene) }, t('useScene')),
                         scene.origin === 'local'
@@ -1021,6 +1039,8 @@ window.__ModuleLoader__.load({
 .fde-scene-m { display:flex; gap:6px; flex-wrap:wrap; }
 .fde-scene-d { margin-top:6px; padding-top:10px; border-top:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.08));
   display:flex; flex-direction:column; gap:6px; }
+.fde-scene-foot { display:flex; gap:10px; flex-wrap:wrap; font-size:10.5px; line-height:1.6;
+  color:var(--dsw-alias-label-tertiary,#9a9a9a); padding-top:6px; border-top:1px dashed var(--dsw-alias-border-l2,rgba(0,0,0,.08)); }
 @media (max-width:820px) {
   .fde-body { grid-template-columns:1fr; }
   .fde-side { flex-direction:row; overflow-x:auto; }

@@ -15,6 +15,8 @@
     "client.js",
     "lib/",
     "scenes/",
+    "registry/",
+    "scripts/",
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
@@ -34,7 +36,10 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "node test/smoke.mjs"
+    "market:build": "node scripts/market-build.mjs",
+    "market:check": "node scripts/market-build.mjs --check",
+    "market:validate": "node scripts/market-validate.mjs",
+    "test": "node scripts/market-build.mjs --check && node scripts/market-validate.mjs && node test/smoke.mjs"
   },
   "dsh": {
     "bundle": {

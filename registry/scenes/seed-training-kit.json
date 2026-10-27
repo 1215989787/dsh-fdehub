@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "seed-training-kit",
+  "title": "一次培训录音 → 课件与考核题",
+  "domain": "人力",
+  "industry": "通用",
+  "summary": "把内训录音转成课件大纲、要点卡与考核题，便于跨团队复用并验证掌握程度。",
+  "pain": "培训靠重复讲，讲完没人知道谁真的学会了。",
+  "aiPattern": "生成 + 结构化",
+  "injection": "培训结束后由培训负责人一键生成并分发",
+  "inputs": "培训录音、讲义、历史考核题、岗位能力要求",
+  "outputs": "课件大纲、要点卡、10 道考核题（含答案与出处时间戳）",
+  "humanInLoop": "讲师校对术语与答案后发布",
+  "proofMetric": "单场培训复用率从 0 到 6 个团队；考核通过率可量化",
+  "effort": "S",
+  "metrics": [
+    "课件制作 2 人天 → 2 小时"
+  ],
+  "risks": [
+    "口述中的参数有误会被放大到课件",
+    "考核题容易只考记忆不考应用"
+  ],
+  "tags": [
+    "人力",
+    "生成 + 结构化"
+  ],
+  "author": "",
+  "org": "",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "published": true,
+  "featured": false,
+  "createdAt": "2026-10-27T00:00:00.000Z",
+  "updatedAt": "2026-10-27T00:00:00.000Z"
+}

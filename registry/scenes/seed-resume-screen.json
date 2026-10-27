@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "seed-resume-screen",
+  "title": "简历批量 → 岗位匹配初筛",
+  "domain": "人力",
+  "industry": "通用",
+  "summary": "按岗位画像对简历做结构化抽取与匹配打分，并给出「为什么匹配/不匹配」的依据。",
+  "pain": "一个岗位几百份简历，人工筛到后面标准会飘。",
+  "aiPattern": "抽取 + 打分排序",
+  "injection": "简历进入招聘系统后先跑初筛，HR 只看排序后的前 30%",
+  "inputs": "简历 PDF/Word、岗位 JD、团队现有人员画像",
+  "outputs": "结构化候选人卡（经历/技能/亮点/疑点）+ 匹配分 + 依据引用",
+  "humanInLoop": "HR 复核并决定是否面试，机器不做淘汰决定",
+  "proofMetric": "初筛耗时下降 60%；面试到场率与录用质量不下降",
+  "effort": "S",
+  "metrics": [
+    "单岗位初筛 6 小时 → 1.5 小时"
+  ],
+  "risks": [
+    "简历夸大难以识别",
+    "打分容易被学校/公司名带节奏，需显式屏蔽"
+  ],
+  "tags": [
+    "人力",
+    "抽取 + 打分排序"
+  ],
+  "author": "",
+  "org": "",
+  "version": "0.1.0",
+  "license": "CC-BY-4.0",
+  "published": true,
+  "featured": false,
+  "createdAt": "2026-10-27T00:00:00.000Z",
+  "updatedAt": "2026-10-27T00:00:00.000Z"
+}
