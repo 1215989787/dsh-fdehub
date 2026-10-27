@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-27T00:00:00.000Z",
+  "note": "远端索引。插件通过 cordis.patch.yml 里的 indexUrl 指向本文件即可拿到这里列出的场景。每条场景同时可以放在 scenes/<id>.json；索引里只放摘要字段与文件路径。",
+  "scenes": []
+}

@@ -1,0 +1,58 @@
+# dsh-fdehub — FDE 工坊 + 场景市场
+#
+# 本 bundle 只插入一行 Host 插件；Client 半由 package.json 的 dsh.client 声明。
+# 下面每个开关都有安全默认值（见 lib/config.js），可在此覆盖，
+# 也可由面板 POST /fdehub/api/config 运行期修改（重启后回到本文件）。
+- insert:
+    - id: dsh-fdehub
+      name: 'dsh-fdehub'
+      config:
+        enabled: true
+        # 数据根目录（留空 = $DSH_HOME/fdehub）
+        # 案例、场景、上传的原始音频/文稿都落在这里，换机器直接拷走。
+        dataDir: ''
+        # 界面语言：zh（默认）/ en / auto（跟随宿主）
+        lang: zh
+        # 单次上传上限（MB）：现场录音一小时 opus 约 15-30MB，200 够用
+        maxUploadMB: 200
+        # ── 转写（ASR）───────────────────────────────────────────────
+        # auto  = 先找宿主语音服务，再退回本地命令，都没有就如实标「未转写」
+        # host  = 只用宿主语音服务
+        # local = 只用本地命令
+        # off   = 不转写，只归档音频（事后手动粘文稿）
+        asrMode: auto
+        # 本地转写命令模板。可用占位符：{input} {outdir} {basename}
+        # 例（mlx-whisper，Apple Silicon）：
+        #   mlx_whisper {input} --model mlx-community/whisper-large-v3-turbo \
+        #     --output-format txt --output-dir {outdir}
+        # 例（whisper.cpp）：
+        #   whisper-cli -m ~/models/ggml-large-v3.bin -f {input} -otxt -of {outdir}/{basename}
+        asrCommand: ''
+        # 单次转写超时（秒）。一小时的录音在 M 系列上跑 large-v3 约 2-4 分钟。
+        asrTimeoutSec: 1800
+        # ffmpeg 可执行文件（把 webm/m4a/mp3 统一转成 16k 单声道 wav）
+        ffmpegPath: ffmpeg
+        # ── 分析 ────────────────────────────────────────────────────
+        # 复用宿主已配置的模型通道；留空 = 跟随当前会话正在用的路由。
+        # 不引入新凭据，用户不需要为这个插件再配一次 key。
+        llmProvider: ''
+        llmModel: ''
+        # 送进模型的文稿上限（字符）。超长录音先截断并在结果里标注。
+        analysisMaxChars: 60000
+        # 一次分析产出几个 AI 机会点（1-8）
+        maxOpportunities: 5
+        # ── 图片 / 扫描件取文（OCR）──────────────────────────────────
+        # 不内置识别引擎：调用宿主已配置的模型识图，模型不支持图片输入时
+        # 会明确报「换一个多模态模型」，不会静默失败。
+        ocrEnabled: true
+        # 扫描版 PDF 最多识别前 N 页（每页一次模型请求，页数=成本与等待）
+        ocrMaxPages: 5
+        # ── 场景市场 ─────────────────────────────────────────────────
+        # 远端索引：指向 GitHub 上的 scenes/index.json（raw 地址）
+        # 例：https://raw.githubusercontent.com/<owner>/dsh-fdehub/main/scenes/index.json
+        # 留空 = 只用仓库自带的种子场景 + 本地发布的场景
+        indexUrl: ''
+        # 作者署名，发布场景卡时写进去
+        author: ''
+        # 团队/公司，发布场景卡时写进去
+        org: ''

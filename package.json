@@ -1,0 +1,47 @@
+{
+  "name": "dsh-fdehub",
+  "version": "0.1.0",
+  "description": "FDE 工坊 + 场景市场：把现场录音、上传的音频或业务文件，快速梳理成「业务现状 → 痛点 → AI 机会点 → 落地路径」的可交付蓝图，并把沉淀下来的 AI+业务场景作为资产发布、检索、复用。 · Forward-Deployed-Engineer workbench and scenario marketplace for DeepSeek Harness.",
+  "icon": "icon.svg",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/",
+    "scenes/",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "fde",
+    "forward-deployed-engineer",
+    "asr",
+    "ai-scenario",
+    "marketplace"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "node test/smoke.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}
