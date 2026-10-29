@@ -73,6 +73,10 @@ assert.deepEqual(
 for (const tool of tools) {
   assert.equal(typeof tool.execute, 'function', `${tool.name} needs execute`)
   assert.equal(typeof tool.description, 'string', `${tool.name} needs description`)
+  // 宿主把 parameters 直接当函数签名送给模型服务：必须是完整 JSON Schema，
+  // 只给属性映射会被判成 type: null（实测报错：schema must be a JSON Schema of 'type: "object"'）。
+  assert.equal(tool.parameters?.type, 'object', `${tool.name}.parameters must be a JSON Schema object`)
+  assert.equal(typeof tool.parameters.properties, 'object', `${tool.name}.parameters.properties is required`)
 }
 
 // 2. 没有 webServer / tools 的环境：不抛，只是少能力
